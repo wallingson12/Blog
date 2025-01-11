@@ -1,101 +1,42 @@
 /* Estilos gerais para o body */
 body {
-    background: linear-gradient(to right, #E0F7FA, #B2EBF2, #80DEEA);
-    font-family: 'Roboto', sans-serif;
+    background: linear-gradient(to right, #E0F7FA, #B2EBF2, #80DEEA); /* Gradiente suave da esquerda para a direita */
+    font-family: 'Roboto', sans-serif; /* Fonte personalizada */
     margin: 0;
     padding: 0;
-    font-size: 16px;  /* Tamanho base de fonte */
 }
 
 /* Estilos para o conteúdo principal */
 .container {
     max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-    font-size: 1rem;  /* Usando rem para escalabilidade */
+    margin: 0 auto;  /* Centraliza o conteúdo */
+    padding: 20px;  /* Adiciona espaço ao redor */
 }
 
 /* Estilo para os cards */
 .card {
     margin-top: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 15px;
-    font-size: 1rem;  /* Usando rem para escalabilidade */
+    border-radius: 8px;  /* Opcional: Adiciona bordas arredondadas aos cards */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  /* Opcional: Adiciona sombra aos cards */
 }
 
 /* Estilizando os títulos h1, h2 */
 h1, h2 {
     color: #343a40;
-    text-align: center;
-    margin-top: 20px;
-    font-size: 2rem;  /* Usando rem para escalabilidade */
+    text-align: center;  /* Centraliza os títulos */
+    margin-top: 20px;  /* Adiciona espaço acima do título */
 }
 
 /* Estilos para as imagens do avatar */
 .avatar-img {
-    width: 50px;
-    height: 50px;
-    object-fit: cover;
-    border-radius: 50%;
+    width: 50px;  /* Largura da imagem */
+    height: 50px; /* Altura da imagem */
+    object-fit: cover; /* Faz a imagem se ajustar ao tamanho sem distorcer */
 }
 
-/* Links da navegação */
 .nav-link {
-    color: white;
-    text-decoration: none;
-    display: inline-block;
-    text-align: center;
-    padding: 10px;
-    font-size: 1rem;  /* Usando rem para escalabilidade */
-}
-
-/* Responsividade */
-@media screen and (max-width: 768px) {
-    body {
-        font-size: 14px;  /* Ajuste do tamanho da fonte */
-    }
-
-    .container {
-        max-width: 90%;
-        padding: 15px;
-    }
-
-    .card {
-        padding: 10px;
-    }
-
-    .avatar-img {
-        width: 40px;
-        height: 40px;
-    }
-
-    h1, h2 {
-        font-size: 1.8rem;
-    }
-
-    .nav-link {
-        font-size: 0.9rem;
-    }
-}
-
-@media screen and (max-width: 480px) {
-    body {
-        font-size: 12px;  /* Ajuste ainda mais o tamanho da fonte */
-    }
-
-    h1, h2 {
-        font-size: 1.5rem;
-    }
-
-    .nav-link {
-        display: block;
-        padding: 8px;
-        font-size: 0.8rem;
-    }
-
-    .avatar-img {
-        width: 35px;
-        height: 35px;
-    }
+    color: white;  /* Altera a cor do texto para branco */
+    text-decoration: none; /* Remove o sublinhado */
+    display: inline-block;  /* Torna o link um bloco em linha */
+    text-align: center;  /* Centraliza o texto dentro do link */
 }
