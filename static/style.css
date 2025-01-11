@@ -1,0 +1,43 @@
+/* Estilos gerais para o body */
+body {
+    background: linear-gradient(to right, #E0F7FA, #B2EBF2, #80DEEA); /* Gradiente suave da esquerda para a direita */
+    font-family: 'Roboto', sans-serif; /* Fonte personalizada */
+    margin: 0;
+    padding: 0;
+}
+
+/* Estilos para o conteúdo principal */
+.container {
+    max-width: 800px;
+    margin: 0 auto;  /* Centraliza o conteúdo */
+    padding: 20px;  /* Adiciona espaço ao redor */
+}
+
+/* Estilo para os cards */
+.card {
+    margin-top: 20px;
+    border-radius: 8px;  /* Opcional: Adiciona bordas arredondadas aos cards */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  /* Opcional: Adiciona sombra aos cards */
+}
+
+/* Estilizando os títulos h1, h2 */
+h1, h2 {
+    color: #343a40;
+    text-align: center;  /* Centraliza os títulos */
+    margin-top: 20px;  /* Adiciona espaço acima do título */
+}
+
+/* Estilos para as imagens do avatar */
+.avatar-img {
+    width: 50px;  /* Largura da imagem */
+    height: 50px; /* Altura da imagem */
+    object-fit: cover; /* Faz a imagem se ajustar ao tamanho sem distorcer */
+}
+
+.nav-link {
+    color: white;  /* Altera a cor do texto para branco */
+    text-decoration: none; /* Remove o sublinhado */
+    display: inline-block;  /* Torna o link um bloco em linha */
+    text-align: center;  /* Centraliza o texto dentro do link */
+}
+}
