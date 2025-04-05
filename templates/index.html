@@ -7,12 +7,16 @@
             <div class="card-body">
                 <div class="d-flex align-items-center">
                     {% if post.autor.gender == 'Masculino' %}
-                    <img src="{{ url_for('static', filename='uploads/avatars/default_men_avatar.jpg') }}" alt="Avatar" class="avatar-img">
+                        <img src="{{ url_for('static', filename='uploads/avatars/default_men_avatar.jpg') }}" alt="Avatar" class="avatar-img">
                     {% else %}
-                    <img src="{{ url_for('static', filename='uploads/avatars/default_women_avatar.jpg') }}" alt="Avatar" class="avatar-img">
+                        <img src="{{ url_for('static', filename='uploads/avatars/default_women_avatar.jpg') }}" alt="Avatar" class="avatar-img">
                     {% endif %}
                     <h5 class="card-title ml-3">{{ post.titulo }}</h5>
                 </div>
+                {% if post.image %}
+                    <!-- Exibir a imagem do post -->
+                    <img src="{{ url_for('uploaded_file', folder='post_images', filename=post.image) }}" alt="Imagem do Post" class="img-fluid">
+                {% endif %}
                 <p class="card-text">{{ post.conteudo }}</p>
                 <p class="text-muted">Postado por: {{ post.autor.username }}</p>
             </div>
