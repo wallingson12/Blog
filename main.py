@@ -21,7 +21,7 @@ app.config['SECRET_KEY'] = 'sua_chave_secreta_aqui'
 UPLOAD_FOLDER = os.path.join('static', 'uploads', 'post_images')
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:85082518@aws-0-sa-east-1.pooler.supabase.com:6543/postgres'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres.cfhkuvuqyzjqizkqqpwm:85082518@aws-0-sa-east-1.pooler.supabase.com:6543/postgres'
 # Inicializando o banco de dados
 db.init_app(app)
 
