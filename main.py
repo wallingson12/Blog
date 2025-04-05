@@ -7,6 +7,8 @@ from werkzeug.utils import secure_filename
 import os
 from flask_migrate import Migrate
 from flask import send_from_directory
+from datetime import datetime
+from models import Like, Post  # ou onde seus modelos estiverem
 
 # Inicializando a aplicação
 app = Flask(__name__)
@@ -96,6 +98,21 @@ def register():
 
     return render_template('register.html', form=form)
 
+@app.route('/curtir/<int:post_id>', methods=['POST'])
+@login_required
+def curtir(post_id):
+    post = Post.query.get_or_404(post_id)
+    like = Like.query.filter_by(usuario_id=current_user.id, post_id=post.id).first()
+
+    if like:
+        db.session.delete(like)  # Remove curtida
+    else:
+        novo_like = Like(usuario_id=current_user.id, post_id=post.id)
+        db.session.add(novo_like)
+
+    db.session.commit()
+    return redirect(url_for('index'))
+
 # Rota de logout
 @app.route('/logout')
 @login_required
@@ -133,6 +150,25 @@ def new_post():
 @app.route('/sobre')
 def sobre():
     return render_template('sobre.html')
+
+from flask import request
+from models import Comentario
+
+@app.route('/comentar/<int:post_id>', methods=['POST'])
+@login_required
+def comentar(post_id):
+    conteudo = request.form.get('conteudo')
+
+
+    if conteudo:
+        novo_comentario = Comentario(conteudo=conteudo, usuario_id=current_user.id, post_id=post_id)
+        db.session.add(novo_comentario)
+        db.session.commit()
+        flash('Comentário adicionado com sucesso!', 'success')
+    else:
+        flash('O comentário não pode estar vazio.', 'warning')
+
+    return redirect(url_for('index'))
 
 # Inicializando o servidor
 if __name__ == '__main__':
