@@ -34,9 +34,13 @@ h1, h2 {
     object-fit: cover; /* Faz a imagem se ajustar ao tamanho sem distorcer */
 }
 
-.nav-link {
-    color: white;  /* Altera a cor do texto para branco */
-    text-decoration: none; /* Remove o sublinhado */
-    display: inline-block;  /* Torna o link um bloco em linha */
-    text-align: center;  /* Centraliza o texto dentro do link */
+@media (max-width: 991px) {
+  .navbar-nav {
+    text-align: center;
+    width: 100%;
+  }
+
+  .nav-link {
+    padding: 10px 0;
+  }
 }
