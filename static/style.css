@@ -1,46 +1,81 @@
-/* Estilos gerais para o body */
+/* Estilo global do body */
 body {
-    background: linear-gradient(to right, #E0F7FA, #B2EBF2, #80DEEA); /* Gradiente suave da esquerda para a direita */
-    font-family: 'Roboto', sans-serif; /* Fonte personalizada */
+    background: linear-gradient(to right, #E0F7FA, #B2EBF2, #80DEEA);
+    font-family: 'Roboto', sans-serif;
     margin: 0;
     padding: 0;
+    min-height: 100vh;
 }
 
-/* Estilos para o conteúdo principal */
+/* Centralização e espaçamento principal */
 .container {
     max-width: 800px;
-    margin: 0 auto;  /* Centraliza o conteúdo */
-    padding: 20px;  /* Adiciona espaço ao redor */
+    margin: 0 auto;
+    padding: 20px;
 }
 
-/* Estilo para os cards */
+/* Estilo dos cards de posts */
 .card {
     margin-top: 20px;
-    border-radius: 8px;  /* Opcional: Adiciona bordas arredondadas aos cards */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  /* Opcional: Adiciona sombra aos cards */
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
 }
 
-/* Estilizando os títulos h1, h2 */
+/* Títulos */
 h1, h2 {
     color: #343a40;
-    text-align: center;  /* Centraliza os títulos */
-    margin-top: 20px;  /* Adiciona espaço acima do título */
-}
-
-/* Estilos para as imagens do avatar */
-.avatar-img {
-    width: 50px;  /* Largura da imagem */
-    height: 50px; /* Altura da imagem */
-    object-fit: cover; /* Faz a imagem se ajustar ao tamanho sem distorcer */
-}
-
-@media (max-width: 991px) {
-  .navbar-nav {
     text-align: center;
-    width: 100%;
-  }
+    margin-top: 20px;
+    font-weight: bold;
+}
 
-  .nav-link {
-    padding: 10px 0;
-  }
+/* Imagem do avatar */
+.avatar-img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+/* Links da navbar */
+.nav-link {
+    color: white !important;
+    text-decoration: none;
+    padding: 8px 15px;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+}
+
+/* Estilo para as imagens dos posts */
+.card img.img-fluid {
+    max-height: 400px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+/* Responsividade para o título e avatar */
+.card-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+/* Ajustes para telas menores */
+@media (max-width: 576px) {
+    .avatar-img {
+        width: 40px;
+        height: 40px;
+    }
+
+    .card-title {
+        font-size: 1rem;
+    }
+
+    .container {
+        padding: 10px;
+    }
 }
