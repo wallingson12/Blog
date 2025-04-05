@@ -16,7 +16,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config['SECRET_KEY'] = 'sua_chave_secreta_aqui'
 
 # Definindo o diretório para o upload do avatar
-UPLOAD_FOLDER = 'uploads/avatars'
+UPLOAD_FOLDER = os.path.join('static', 'uploads', 'post_images')
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # Inicializando o banco de dados
@@ -58,9 +58,9 @@ def login():
             flash('Usuário ou senha incorretos!', 'danger')
     return render_template('login.html', form=form)
 
-@app.route('/uploads/avatars/<filename>')
-def uploaded_file(filename):
-    return send_from_directory(os.path.join(app.root_path, 'static/uploads/avatars'), filename)
+@app.route('/uploads/<folder>/<filename>')
+def uploaded_file(folder, filename):
+    return send_from_directory(os.path.join(app.root_path, 'static', 'uploads', folder), filename)
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -110,12 +110,24 @@ def logout():
 @login_required
 def new_post():
     form = PostForm()
+
     if form.validate_on_submit():
-        novo_post = Post(titulo=form.title.data, conteudo=form.content.data, autor=current_user)
+        image_filename = None  # Variável para armazenar o nome da imagem
+
+        # Verificar se o formulário tem uma imagem
+        if form.image.data:
+            image = form.image.data
+            image_filename = secure_filename(image.filename)  # Garantir nome seguro para a imagem
+            image.save(os.path.join(app.config['UPLOAD_FOLDER'], image_filename))
+
+        # Criar o novo post e salvar no banco de dados
+        novo_post = Post(titulo=form.title.data, conteudo=form.content.data, image=image_filename, autor=current_user)
         db.session.add(novo_post)
         db.session.commit()
+
         flash('Post criado com sucesso!', 'success')
-        return redirect(url_for('index'))
+        return redirect(url_for('index'))  # Certifique-se de retornar um redirecionamento
+
     return render_template('new_post.html', form=form)
 
 @app.route('/sobre')

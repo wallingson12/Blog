@@ -19,4 +19,5 @@ class RegisterForm(FlaskForm):
 class PostForm(FlaskForm):
     title = StringField('Título', validators=[DataRequired()])
     content = TextAreaField('Conteúdo', validators=[DataRequired()])
+    image = FileField('Imagem', validators=[FileAllowed(['jpg', 'png', 'jpeg'], 'Somente imagens são permitidas!')])
     submit = SubmitField('Publicar')

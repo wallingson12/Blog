@@ -14,5 +14,9 @@ class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     titulo = db.Column(db.String(200), nullable=False)
     conteudo = db.Column(db.Text, nullable=False)
+    image = db.Column(db.String(120), nullable=True)
     usuario_id = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=False)
-    autor = db.relationship('Usuario', backref=db.backref('posts', lazy=True))
+    autor = db.relationship('Usuario', backref=db.backref('posts', lazy=True, cascade="all, delete"))
+
+    def __repr__(self):
+        return f"<Post {self.id}>"
