@@ -14,13 +14,14 @@ from models import Like, Post  # ou onde seus modelos estiverem
 app = Flask(__name__)
 
 # Configurações
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL")
 app.config['SECRET_KEY'] = 'sua_chave_secreta_aqui'
 
 # Definindo o diretório para o upload do avatar
 UPLOAD_FOLDER = os.path.join('static', 'uploads', 'post_images')
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:85082518@db.cfhkuvuqyzjqizkqqpwm.supabase.co:5432/postgres'
 # Inicializando o banco de dados
 db.init_app(app)
 
