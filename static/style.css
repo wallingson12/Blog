@@ -67,6 +67,11 @@ h1, h2 {
 
 /* Ajustes para telas menores */
 @media (max-width: 576px) {
+
+    .navbar-brand {
+        font-size: 2.5rem; /* Ajuste conforme necessário */
+    }
+
     .nav-link {
         font-size: 1rem;   /* Aumenta o tamanho da fonte para dispositivos móveis */
         padding: 12px 20px; /* Aumenta o espaçamento para melhor área de toque */
