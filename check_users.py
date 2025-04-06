@@ -1,63 +1,50 @@
-from sqlalchemy import create_engine, inspect
+import os
+import pandas as pd
+from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.exc import SQLAlchemyError
-import pandas as pd
-# Importando a classe Usuario do seu arquivo models.py
 from models import Usuario
+from dotenv import load_dotenv
+from tabulate import tabulate
 
-# Caminho correto para o SQLite no Windows (use três barras após "sqlite:///")
-db_path = r"C:\Users\wallingson.silva\TO DO\Blog\instance\database.db"
-engine = create_engine(f"sqlite:///{db_path}")
+# Carregar variáveis do .env
+load_dotenv()
 
-# Criar uma sessão para interagir com o banco de dados
-Session = sessionmaker(bind=engine)
-session = Session()
+def get_engine():
+    db_url = os.getenv("DATABASE_URL")
+    if not db_url:
+        raise ValueError("DATABASE_URL não encontrada no .env")
+    return create_engine(db_url)
 
-# Inspecionar tabelas no banco de dados
-inspector = inspect(engine)
-tables = inspector.get_table_names()
+def show_usuarios(engine):
+    try:
+        df = pd.read_sql('SELECT * FROM "usuario"', engine)
+        print("\n👥 Lista de Usuários:\n")
+        print(tabulate(df, headers='keys', tablefmt='fancy_grid'))
+    except Exception as e:
+        print(f"❌ Erro ao buscar usuários: {e}")
 
-if not tables:
-    print("O banco de dados está vazio ou não possui tabelas.")
-else:
-    print("Tabelas encontradas:", tables)
-
-    # Exibir as colunas e dados de cada tabela
-    for table in tables:
-        print(f"\n🔹 Dados da tabela: {table}")
-
-        # Obter as colunas da tabela
-        columns = [column['name'] for column in inspector.get_columns(table)]
-        print(f"🔹 Colunas da tabela: {columns}")
-
-        # Exibir os dados da tabela
-        df = pd.read_sql(f"SELECT * FROM {table}", engine)
-        print(df)
-
-
-# Função para deletar um usuário
-def delete_user_by_name():
-    # Solicitar o nome do usuário a ser excluído
+def delete_user_by_name(session):
     username_to_delete = input("Digite o nome do usuário que deseja excluir: ")
 
     try:
-        # Buscar o usuário pelo nome
         user = session.query(Usuario).filter_by(username=username_to_delete).first()
-
         if user:
-            # Deletar o usuário
             session.delete(user)
             session.commit()
-            print(f"Usuário {username_to_delete} foi deletado.")
+            print(f"✅ Usuário '{username_to_delete}' foi deletado.")
         else:
-            print(f"Usuário com nome '{username_to_delete}' não encontrado.")
+            print(f"⚠️ Usuário '{username_to_delete}' não encontrado.")
     except SQLAlchemyError as e:
         session.rollback()
-        print(f"Ocorreu um erro ao tentar deletar o usuário: {e}")
+        print(f"❌ Erro ao deletar usuário: {e}")
     finally:
-        # Fechar a sessão
         session.close()
 
+if __name__ == "__main__":
+    engine = get_engine()
+    Session = sessionmaker(bind=engine)
+    session = Session()
 
-# Chamar a função para deletar o usuário
-delete_user_by_name()
+    show_usuarios(engine)
+    delete_user_by_name(session)

@@ -7,11 +7,16 @@ from werkzeug.utils import secure_filename
 import os
 from flask_migrate import Migrate
 from flask import send_from_directory
-from datetime import datetime
 from models import Like, Post  # ou onde seus modelos estiverem
+from dotenv import load_dotenv
+from models import Comentario
+from flask_login import current_user
+from flask import redirect, url_for, request, flash
 
 # Inicializando a aplicação
 app = Flask(__name__)
+
+load_dotenv()
 
 # Configurações
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL")
@@ -21,7 +26,8 @@ app.config['SECRET_KEY'] = 'sua_chave_secreta_aqui'
 UPLOAD_FOLDER = os.path.join('static', 'uploads', 'post_images')
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres.cfhkuvuqyzjqizkqqpwm:85082518@aws-0-sa-east-1.pooler.supabase.com:6543/postgres'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL")
+
 # Inicializando o banco de dados
 db.init_app(app)
 
@@ -139,7 +145,7 @@ def new_post():
             image.save(os.path.join(app.config['UPLOAD_FOLDER'], image_filename))
 
         # Criar o novo post e salvar no banco de dados
-        novo_post = Post(titulo=form.title.data, conteudo=form.content.data, image=image_filename, autor=current_user)
+        novo_post = Post(conteudo=form.content.data, image=image_filename, autor=current_user)
         db.session.add(novo_post)
         db.session.commit()
 
@@ -151,9 +157,6 @@ def new_post():
 @app.route('/sobre')
 def sobre():
     return render_template('sobre.html')
-
-from flask import request
-from models import Comentario
 
 @app.route('/comentar/<int:post_id>', methods=['POST'])
 @login_required
@@ -169,6 +172,29 @@ def comentar(post_id):
     else:
         flash('O comentário não pode estar vazio.', 'warning')
 
+    return redirect(url_for('index'))
+
+@app.route('/delete_post/<int:post_id>', methods=['POST'])
+@login_required
+def delete_post(post_id):
+    post = Post.query.get_or_404(post_id)
+
+    # Verifica se o usuário atual é o autor do post
+    if post.usuario_id != current_user.id:
+        flash('Você não tem permissão para excluir este post.', 'danger')
+        return redirect(url_for('index'))
+
+    # Se tiver imagem associada, apaga o arquivo
+    if post.image:
+        image_path = os.path.join(app.config['UPLOAD_FOLDER'], post.image)
+        if os.path.exists(image_path):
+            os.remove(image_path)
+
+    # Remove o post
+    db.session.delete(post)
+    db.session.commit()
+
+    flash('Post excluído com sucesso!', 'success')
     return redirect(url_for('index'))
 
 # Inicializando o servidor
