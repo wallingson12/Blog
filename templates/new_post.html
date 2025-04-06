@@ -4,10 +4,6 @@
     <form method="POST" enctype="multipart/form-data">
         {{ form.hidden_tag() }}
         <div class="mb-3">
-            <label class="form-label">Título</label>
-            {{ form.title(class="form-control") }}
-        </div>
-        <div class="mb-3">
             <label class="form-label">Conteúdo</label>
             {{ form.content(class="form-control", rows=5) }}
         </div>

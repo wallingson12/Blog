@@ -9,12 +9,14 @@
                 <div class="d-flex align-items-center gap-3 flex-wrap">
                     {% if post.autor.gender == 'Masculino' %}
                         <img src="{{ url_for('static', filename='uploads/avatars/default_men_avatar.jpg') }}"
-                             alt="Avatar" class="avatar-img rounded-circle">
+                             alt="Avatar" class="avatar-img rounded-circle" style="width: 60px; height: 60px;">
                     {% else %}
                         <img src="{{ url_for('static', filename='uploads/avatars/default_women_avatar.jpg') }}"
-                             alt="Avatar" class="avatar-img rounded-circle">
+                             alt="Avatar" class="avatar-img rounded-circle" style="width: 60px; height: 60px;">
                     {% endif %}
-                    <h5 class="card-title mb-0">{{ post.titulo }}</h5>
+                    <div>
+                        <strong>{{ post.autor.username }}</strong><br>
+                    </div>
                 </div>
 
                 {% if post.image %}
@@ -25,7 +27,6 @@
                 {% endif %}
 
                 <p class="card-text mt-3">{{ post.conteudo }}</p>
-                <p class="text-muted">Postado por: {{ post.autor.username }}</p>
 
                 <!-- Botão de Curtir -->
                 <form method="POST" action="{{ url_for('curtir', post_id=post.id) }}">
@@ -52,7 +53,7 @@
                             </small>
                         </div>
                     {% else %}
-                        <p class="text-muted">Nenhum comentário ainda.</p>
+                        <p class="text-muted"> </p>
                     {% endfor %}
                 </div>
 
@@ -67,6 +68,14 @@
                     </form>
                 {% else %}
                     <p class="mt-3 text-muted">Faça login para comentar.</p>
+                {% endif %}
+
+                <!-- Botão de excluir (visível apenas para o autor) -->
+                {% if current_user.is_authenticated and current_user.id == post.usuario_id %}
+                    <form action="{{ url_for('delete_post', post_id=post.id) }}" method="POST"
+                          onsubmit="return confirm('Tem certeza que deseja excluir este post?');" class="mt-3">
+                        <button type="submit" class="btn btn-danger btn-sm">🗑️ Excluir</button>
+                    </form>
                 {% endif %}
             </div>
         </div>
