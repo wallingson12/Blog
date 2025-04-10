@@ -3,17 +3,23 @@
 {% block content %}
     <h1 class="text-center">Comunidade - Só Entre Nós</h1>
 
+    {% if current_user.is_authenticated %}
+        <div class="text-end mb-3">
+            <a href="{{ url_for('perfil') }}" class="btn btn-secondary">👤 Meu Perfil</a>
+        </div>
+    {% endif %}
+
     {% for post in posts %}
         <div class="card mt-3">
             <div class="card-body">
                 <div class="d-flex align-items-center gap-3 flex-wrap">
-                    {% if post.autor.gender == 'Masculino' %}
-                        <img src="{{ url_for('static', filename='uploads/avatars/default_men_avatar.jpg') }}"
-                             alt="Avatar" class="avatar-img rounded-circle" style="width: 60px; height: 60px;">
-                    {% else %}
-                        <img src="{{ url_for('static', filename='uploads/avatars/default_women_avatar.jpg') }}"
-                             alt="Avatar" class="avatar-img rounded-circle" style="width: 60px; height: 60px;">
-                    {% endif %}
+
+                    <img src="{{ url_for('static', filename='uploads/avatars/' ~ post.autor.avatar) }}"
+                     alt="Avatar do Autor"
+                     class="rounded-circle"
+                     style="width: 50px; height: 50px; object-fit: cover;">
+
+
                     <div>
                         <strong>{{ post.autor.username }}</strong><br>
                     </div>
