@@ -10,6 +10,10 @@ class Usuario(db.Model, UserMixin):
     password = db.Column(db.String(200), nullable=False)
     gender = db.Column(db.String(10), nullable=False, default='Masculino')
     avatar = db.Column(db.String(150), nullable=True)
+    bio = db.Column(db.String(100), unique=False, nullable=False)
+
+    # Novos campos
+    age = db.Column(db.Integer, nullable=True)
 
 class Like(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -48,3 +52,23 @@ class Comentario(db.Model):
 
     usuario = db.relationship('Usuario', backref=db.backref('comentarios', lazy=True))
     post = db.relationship('Post', backref=db.backref('comentarios', lazy=True, cascade="all, delete-orphan"))
+
+class Amizade(db.Model):
+    __tablename__ = 'amizades'
+    id = db.Column(db.Integer, primary_key=True)
+    solicitante_id = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=False)
+    solicitado_id = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=False)
+    status = db.Column(db.String(20), default='pendente')  # pendente, aceita, recusada
+    data_solicitacao = db.Column(db.DateTime, default=datetime.utcnow)
+
+    solicitante = db.relationship('Usuario',
+        foreign_keys=[solicitante_id],
+        backref=db.backref('amizades_enviadas', lazy='dynamic', foreign_keys=[solicitante_id])
+    )
+    solicitado = db.relationship('Usuario',
+        foreign_keys=[solicitado_id],
+        backref=db.backref('amizades_recebidas', lazy='dynamic', foreign_keys=[solicitado_id])
+    )
+
+    solicitante = db.relationship('Usuario', foreign_keys=[solicitante_id], backref='amizades_enviadas')
+    solicitado = db.relationship('Usuario', foreign_keys=[solicitado_id], backref='amizades_recebidas')
