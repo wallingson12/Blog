@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1 class="text-center">Comunidade - Só Entre Nós</h1>
+
+    {% if current_user.is_authenticated %}
+        <div class="text-end mb-3">
+            <a href="{{ url_for('perfil') }}" class="btn btn-secondary">👤 Meu Perfil</a>
+        </div>
+    {% endif %}
+
+    {% for post in posts %}
+        <div class="card mt-3">
+            <div class="card-body">
+                <div class="d-flex align-items-center gap-3 flex-wrap">
+                    <a href="{{ url_for('perfil_usuario', user_id=post.autor.id) }}" class="text-decoration-none">
+                        <img src="{{ url_for('static', filename='uploads/avatars/' ~ post.autor.avatar) }}"
+                             alt="Avatar do Autor"
+                             class="rounded-circle"
+                             style="width: 50px; height: 50px; object-fit: cover;">
+                    </a>
+
+                    <div>
+                        <a href="{{ url_for('perfil_usuario', user_id=post.autor.id) }}"
+                           class="fw-bold text-decoration-none text-dark">
+                            {{ post.autor.username }}
+                        </a><br>
+                    </div>
+                </div>
+
+                {% if post.image %}
+                    <div class="mt-3">
+                        <img src="{{ url_for('uploaded_file', folder='post_images', filename=post.image) }}"
+                             alt="Imagem do Post" class="img-fluid rounded w-100">
+                    </div>
+                {% endif %}
+
+                <p class="card-text mt-3">{{ post.conteudo }}</p>
+
+                <!-- Botão de Curtir -->
+                <form method="POST" action="{{ url_for('curtir', post_id=post.id) }}">
+                    <button type="submit" class="btn btn-sm {% if current_user.is_authenticated and post.curtido_por(current_user) %}btn-danger{% else %}btn-outline-danger{% endif %}">
+                        ❤️ Curtir <span class="badge bg-light text-dark">{{ post.total_likes() }}</span>
+                    </button>
+                </form>
+
+                <!-- Comentários -->
+                <hr>
+                <div class="comentarios">
+                    <h6 class="mb-3">Comentários:</h6>
+
+                    {% for comentario in post.comentarios %}
+                        <div class="mb-2 p-2 border rounded">
+                            <strong>{{ comentario.usuario.username }}</strong>:
+                            <p class="mb-1">{{ comentario.conteudo }}</p>
+                            <small class="text-muted">
+                                {% if comentario.data_criacao %}
+                                    {{ comentario.data_criacao.strftime('%d/%m/%Y %H:%M') }}
+                                {% else %}
+                                    Data não disponível
+                                {% endif %}
+                            </small>
+                        </div>
+                    {% else %}
+                        <p class="text-muted">Nenhum comentário ainda.</p>
+                    {% endfor %}
+                </div>
+
+                <!-- Formulário de comentário -->
+                {% if current_user.is_authenticated %}
+                    <form action="{{ url_for('comentar', post_id=post.id) }}" method="POST" class="mt-3">
+                        <div class="mb-2">
+                            <textarea name="conteudo" class="form-control" rows="2"
+                                      placeholder="Escreva um comentário..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-sm btn-primary">Comentar</button>
+                    </form>
+                {% else %}
+                    <p class="mt-3 text-muted">Faça login para comentar.</p>
+                {% endif %}
+
+                <!-- Botão de excluir (visível apenas para o autor) -->
+                {% if current_user.is_authenticated and current_user.id == post.usuario_id %}
+                    <form action="{{ url_for('delete_post', post_id=post.id) }}" method="POST"
+                          onsubmit="return confirm('Tem certeza que deseja excluir este post?');" class="mt-3">
+                        <button type="submit" class="btn btn-danger btn-sm">🗑️ Excluir</button>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+    {% endfor %}
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll(".like-btn").forEach(button => {
+            button.addEventListener("click", function () {
+                const postId = this.getAttribute("data-post-id");
+                const url = `/like/${postId}?_=${Date.now()}`;
+                fetch(url, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-Requested-With": "XMLHttpRequest"
+                    }
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        this.querySelector(".like-count").textContent = data.like_count;
+                        if (data.liked) {
+                            this.classList.remove("btn-outline-danger");
+                            this.classList.add("btn-danger");
+                        } else {
+                            this.classList.remove("btn-danger");
+                            this.classList.add("btn-outline-danger");
+                        }
+                    }
+                })
+                .catch(err => console.error("Erro na requisição de like:", err));
+            });
+        });
+    });
+</script>
+{% endblock %}
