@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container mt-4">
+  <div class="card p-4 shadow rounded-3">
+    <div class="d-flex align-items-center justify-content-between flex-wrap">
+      <div class="d-flex align-items-center mb-3">
+        <img src="{{ url_for('static', filename='uploads/avatars/' ~ user.avatar) }}"
+             alt="Avatar do usuário"
+             class="rounded-circle me-3"
+             style="width: 100px; height: 100px; object-fit: cover;">
+
+        <div>
+          <h3 class="mb-0">{{ user.username }}</h3>
+          <p class="text-muted mb-0">Gênero: {{ user.gender }}</p>
+          {% if user.age %}
+            <p class="text-muted mb-0">Idade: {{ user.age }}</p>
+          {% endif %}
+        </div>
+      </div>
+
+      {% if user.id != current_user.id %}
+        {% set amizade = user.amizade_com(current_user.id) %}
+        <div class="text-end">
+          {% if amizade %}
+            {% if amizade.status == 'pendente' %}
+              <button class="btn btn-warning" disabled>Solicitação pendente</button>
+            {% elif amizade.status == 'aceita' %}
+              <button class="btn btn-success" disabled>Amigos</button>
+            {% endif %}
+          {% else %}
+            <form action="{{ url_for('enviar_amizade', user_id=user.id) }}" method="post">
+              <button type="submit" class="btn btn-primary">Adicionar Amigo</button>
+            </form>
+          {% endif %}
+        </div>
+
+        <!-- Botão de adicionar ou revelar crush -->
+        <div class="text-end mt-2">
+          {% if crush_existente %}
+            {% if not crush_existente.revelado %}
+              <form method="POST" action="{{ url_for('revelar_crush', usuario_id=user.id) }}">
+                <button type="submit" class="btn btn-danger">Revelar Crush ❤️</button>
+              </form>
+            {% else %}
+              <button class="btn btn-secondary" disabled>Crush já revelado!</button>
+            {% endif %}
+          {% else %}
+            <form method="POST" action="{{ url_for('adicionar_crush', usuario_id=user.id) }}">
+              <button type="submit" class="btn btn-pink">Adicionar Crush 💘</button>
+            </form>
+          {% endif %}
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Exibindo notificações -->
+    {% if user.id == current_user.id %}
+      <div class="position-relative ms-auto">
+        <button class="btn btn-light position-relative" type="button" data-bs-toggle="collapse" data-bs-target="#notificacoesCollapse" aria-expanded="false" aria-controls="notificacoesCollapse">
+          🔔
+            {% set notificacoes_nao_lidas = user.notificacoes|selectattr('lida', 'equalto', false)|list %}
+            {% if notificacoes_nao_lidas|length > 0 %}
+            <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle" id="notificacao-badge">
+              <span class="visually-hidden">Novas notificações</span>
+            </span>
+          {% endif %}
+        </button>
+      </div>
+
+      <div class="collapse mt-3" id="notificacoesCollapse">
+        {% if user.notificacoes|length > 0 %}
+          {% for notificacao in user.notificacoes %}
+            <form action="{{ url_for('ler_notificacao', notificacao_id=notificacao.id) }}" method="POST">
+              <div class="alert alert-info" {% if notificacao.lida %}style="background-color: #f0f8ff;"{% endif %}>
+                {{ notificacao.mensagem }}
+                {% if not notificacao.lida %}
+                  <button type="submit" class="btn btn-sm btn-outline-success">Marcar como lida</button>
+                {% endif %}
+              </div>
+            </form>
+          {% endfor %}
+        {% else %}
+          <div class="alert alert-warning">
+            Nenhuma notificação para este usuário.
+          </div>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    <!-- Biografia e edição -->
+    <div class="mt-3">
+      {% if user.bio %}
+        <strong>Biografia:</strong>
+        <p>{{ user.bio }}</p>
+      {% endif %}
+
+      {% if current_user.id == user.id %}
+        {% if not editar %}
+          <a href="{{ url_for('perfil_usuario', user_id=user.id, editar=1) }}"
+             class="btn btn-outline-primary mt-2">Editar Perfil</a>
+        {% else %}
+          <form method="POST" enctype="multipart/form-data" class="mt-3">
+            <div class="mb-3">
+              <label for="bio" class="form-label"><strong>Editar Biografia:</strong></label>
+              <textarea class="form-control" name="bio" id="bio" rows="3">{{ user.bio }}</textarea>
+            </div>
+            <div class="mb-3">
+              <label for="avatar" class="form-label"><strong>Atualizar Avatar:</strong></label>
+              <input type="file" class="form-control" name="avatar" id="avatar">
+            </div>
+            <button type="submit" class="btn btn-success">Salvar Alterações</button>
+            <a href="{{ url_for('perfil_usuario', user_id=user.id) }}"
+               class="btn btn-secondary ms-2">Cancelar</a>
+          </form>
+        {% endif %}
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Lista de posts -->
+  {% for post in posts %}
+    <div class="card mt-3">
+      <div class="card-body">
+        <div class="d-flex align-items-center gap-3 flex-wrap">
+          <img src="{{ url_for('static', filename='uploads/avatars/' ~ post.autor.avatar) }}"
+               alt="Avatar do Autor"
+               class="rounded-circle"
+               style="width: 50px; height: 50px; object-fit: cover;">
+          <div>
+            <strong>{{ post.autor.username }}</strong><br>
+          </div>
+        </div>
+
+        {% if post.image %}
+          <div class="mt-3">
+            <img src="{{ url_for('uploaded_file', folder='post_images', filename=post.image) }}"
+                 alt="Imagem do Post" class="img-fluid rounded w-100">
+          </div>
+        {% endif %}
+
+        <p class="card-text mt-3">{{ post.conteudo }}</p>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+
+{% endblock %}
