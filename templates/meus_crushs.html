@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Meus Crushes Revelados</h2>
+{% if crushes_revelados %}
+    <ul>
+    {% for crush in crushes_revelados %}
+        <li>
+            <strong>{{ crush.admirador.username }}</strong> teve coragem de revelar o crush para você!
+            {% if crush.eh_mutuo() %}
+                <span>💖 E é recíproco!</span>
+            {% else %}
+                <span>👀 Ainda não é recíproco...</span>
+            {% endif %}
+        </li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>Você ainda não tem crushes revelados!</p>
+{% endif %}
+{% endblock %}
