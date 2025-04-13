@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Minha Rede Social</title>
+    <title>Ping</title>
 
     <!-- Bootstrap -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
@@ -17,6 +16,8 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
             <!-- Logo / Início -->
+            <!-- CERTO -->
+            <img src="{{ url_for('static', filename='Logo.jpg') }}" alt="PING" class="logo align-self-center me-3">
             <a class="navbar-brand" href="{{ url_for('index') }}">Início</a>
 
             <!-- Botão hamburguer para mobile -->
@@ -42,15 +43,15 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('sobre') }}">Sobre</a>
+                        </li>
                     {% else %}
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url_for('login') }}">Login</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url_for('register') }}">Registrar</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('sobre') }}">Sobre</a>
                         </li>
                     {% endif %}
                 </ul>

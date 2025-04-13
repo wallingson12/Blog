@@ -1,10 +1,11 @@
 /* Estilo global do body */
 body {
-    background: linear-gradient(to right, #E0F7FA, #B2EBF2, #80DEEA);
+    background: linear-gradient(145deg, #e0f7fa 0%, #ffffff 100%);
     font-family: 'Roboto', sans-serif;
     margin: 0;
     padding: 0;
     min-height: 100vh;
+    color: #333;
 }
 
 /* Centralização e espaçamento principal */
@@ -19,8 +20,15 @@ body {
     animation: fadeInUp 0.4s ease forwards;
     margin-top: 20px;
     border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
+    padding: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     overflow: hidden;
+    transition: box-shadow 0.2s ease-in-out;
+}
+
+.card:hover {
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
 }
 
 @keyframes fadeInUp {
@@ -35,10 +43,20 @@ body {
 }
 
 /* Títulos */
-h1, h2 {
+h1 {
+    font-size: 2rem;
     color: #343a40;
     text-align: center;
     margin-top: 20px;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+h2 {
+    font-size: 1.5rem;
+    color: #343a40;
+    text-align: center;
+    margin-bottom: 8px;
     font-weight: bold;
 }
 
@@ -52,8 +70,8 @@ h1, h2 {
 
 /* Links da navbar */
 .nav-link {
-    font-size: 0.875rem; /* Tamanho da fonte semelhante ao da ESPN */
-    padding: 8px 15px;   /* Espaçamento interno para melhor área de clique */
+    font-size: 0.875rem;
+    padding: 8px 15px;
     color: white !important;
     text-decoration: none;
     transition: background-color 0.2s ease-in-out;
@@ -65,11 +83,18 @@ h1, h2 {
     border-radius: 5px;
 }
 
+.nav-link:focus {
+    outline: 2px solid #fff;
+    outline-offset: 2px;
+}
+
+/* Estilo das imagens dos cards */
 .card img.img-fluid {
-    max-height: 400px;
     width: 100%;
+    height: auto;
+    aspect-ratio: 16/9;
     object-fit: cover;
-    border-radius: 8px;
+    border-radius: 10px;
     transition: transform 0.3s ease-in-out;
 }
 
@@ -77,20 +102,48 @@ h1, h2 {
     transform: scale(1.02);
 }
 
-/* Responsividade para o título e avatar */
-.card-title {
-    font-size: 1.25rem;
-    font-weight: 600;
+.logo {
+    width: 5%;
+    height: auto;
 }
 
-/* Ajustes para telas menores */
-@media (max-width: 576px) {
+/* Título dentro do card */
+.card-title {
+    font-size: clamp(1rem, 1.5vw, 1.25rem);
+    font-weight: 600;
+    margin-top: 10px;
+    margin-bottom: 8px;
+}
 
+/* Botão reutilizável */
+.btn-primary {
+    background-color: #00bcd4;
+    border: none;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #0097a7;
+}
+
+/* Texto destacado */
+.texto-preto-negrito {
+    color: #000 !important;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+/* Responsividade */
+@media (max-width: 576px) {
     .navbar-brand {
-        font-size: 2.5rem; /* Ajuste conforme necessário */
+        font-size: 2.5rem;
     }
 
-}
     .card-title {
         font-size: 1rem;
     }
@@ -103,3 +156,4 @@ h1, h2 {
     .container {
         padding: 10px;
     }
+}

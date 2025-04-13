@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1 class="text-center">Comunidade - Só Entre Nós</h1>
+    <h1 class="text-center">Ping</h1>
 
     {% if current_user.is_authenticated %}
         <div class="text-end mb-3">
@@ -37,10 +37,27 @@
 
                 <p class="card-text mt-3">{{ post.conteudo }}</p>
 
-                <!-- Botão de Curtir -->
-                <form method="POST" action="{{ url_for('curtir', post_id=post.id) }}">
-                    <button type="submit" class="btn btn-sm {% if current_user.is_authenticated and post.curtido_por(current_user) %}btn-danger{% else %}btn-outline-danger{% endif %}">
-                        ❤️ Curtir <span class="badge bg-light text-dark">{{ post.total_likes() }}</span>
+                <!-- Botões de Reações -->
+                <form method="POST" action="{{ url_for('reagir', post_id=post.id) }}" class="d-flex gap-2 mt-2 flex-wrap">
+                    <button type="submit"
+                            name="tipo" value="like"
+                            class="btn btn-sm {% if post.reagido_por(current_user, 'like') %}btn-danger{% else %}btn-outline-danger{% endif %}">
+                        ❤️ Like <span class="badge bg-light text-dark">{{ post.contar_reacoes('like') }}</span>
+                    </button>
+                    <button type="submit"
+                            name="tipo" value="gargalhada"
+                            class="btn btn-sm {% if post.reagido_por(current_user, 'gargalhada') %}btn-warning{% else %}btn-outline-warning{% endif %}">
+                        😂 Gargalhada <span class="badge bg-light text-dark">{{ post.contar_reacoes('gargalhada') }}</span>
+                    </button>
+                    <button type="submit"
+                            name="tipo" value="choro"
+                            class="btn btn-sm {% if post.reagido_por(current_user, 'choro') %}btn-info{% else %}btn-outline-info{% endif %}">
+                        😢 Choro <span class="badge bg-light text-dark">{{ post.contar_reacoes('choro') }}</span>
+                    </button>
+                    <button type="submit"
+                            name="tipo" value="raiva"
+                            class="btn btn-sm {% if post.reagido_por(current_user, 'raiva') %}btn-dark{% else %}btn-outline-dark{% endif %}">
+                        😡 Raiva <span class="badge bg-light text-dark">{{ post.contar_reacoes('raiva') }}</span>
                     </button>
                 </form>
 
@@ -89,38 +106,4 @@
             </div>
         </div>
     {% endfor %}
-{% endblock %}
-
-{% block scripts %}
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        document.querySelectorAll(".like-btn").forEach(button => {
-            button.addEventListener("click", function () {
-                const postId = this.getAttribute("data-post-id");
-                const url = `/like/${postId}?_=${Date.now()}`;
-                fetch(url, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "X-Requested-With": "XMLHttpRequest"
-                    }
-                })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.success) {
-                        this.querySelector(".like-count").textContent = data.like_count;
-                        if (data.liked) {
-                            this.classList.remove("btn-outline-danger");
-                            this.classList.add("btn-danger");
-                        } else {
-                            this.classList.remove("btn-danger");
-                            this.classList.add("btn-outline-danger");
-                        }
-                    }
-                })
-                .catch(err => console.error("Erro na requisição de like:", err));
-            });
-        });
-    });
-</script>
 {% endblock %}
