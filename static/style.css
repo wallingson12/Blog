@@ -103,7 +103,7 @@ h2 {
 }
 
 .logo {
-    width: 5%;
+    width: 10%;
     height: auto;
 }
 
@@ -156,4 +156,43 @@ h2 {
     .container {
         padding: 10px;
     }
+}
+
+/* empilha as mensagens */
+.message-container {
+  display: flex;
+  flex-direction: column;
+}
+
+/* estilo base das bolhas */
+.message-bubble {
+  max-width: 70%;
+  margin: .5rem 0;
+  padding: .75rem 1rem;
+  border-radius: 1rem;
+  position: relative;
+  word-wrap: break-word;
+}
+
+/* bolha de quem recebe (incoming) */
+.incoming {
+  background-color: #f1f3f5;
+  align-self: flex-start;
+  border-bottom-left-radius: 0;
+}
+
+/* bolha de quem envia (outgoing) */
+.outgoing {
+  background-color: #0d6efd;
+  color: white;
+  align-self: flex-end;
+  border-bottom-right-radius: 0;
+}
+
+/* horário dentro da bolha */
+.bubble-time {
+  font-size: 0.75rem;
+  color: #6c757d;
+  margin-top: .25rem;
+  text-align: right;
 }

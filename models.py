@@ -4,6 +4,24 @@ from datetime import datetime
 
 db = SQLAlchemy()
 
+class Conversa(db.Model):
+    __tablename__ = 'conversa'
+
+    id = db.Column(db.Integer, primary_key=True)
+    usuario1_id = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=False)
+    usuario2_id = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=False)
+    data_criacao = db.Column(db.DateTime, default=datetime.utcnow)
+
+    # Relacionamentos com a tabela Usuario
+    usuario1 = db.relationship('Usuario', foreign_keys=[usuario1_id], backref='minhas_conversas_iniciadas ')
+    usuario2 = db.relationship('Usuario', foreign_keys=[usuario2_id], backref='minhas_conversas_recebidas')
+
+    # Relacionamento com a tabela Mensagem
+    mensagens = db.relationship('Mensagem', back_populates='conversa', cascade='all, delete-orphan')
+
+    def __repr__(self):
+        return f"<Conversa entre {self.usuario1_id} e {self.usuario2_id}>"
+
 class Usuario(db.Model, UserMixin):
     __tablename__ = 'usuario'
 
@@ -15,37 +33,21 @@ class Usuario(db.Model, UserMixin):
     bio = db.Column(db.String(100), nullable=False, default='')
     age = db.Column(db.Integer, nullable=True)
 
-    # relacionamentos
-    posts = db.relationship('Post', back_populates='autor', cascade='all, delete-orphan', lazy='dynamic')
-    likes = db.relationship('Like', back_populates='usuario', cascade='all, delete-orphan', lazy='dynamic')
-    comentarios = db.relationship('Comentario', back_populates='usuario', cascade='all, delete-orphan', lazy='dynamic')
+    # Relacionamentos com as conversas
+    conversas_iniciadas = db.relationship('Conversa', foreign_keys=[Conversa.usuario1_id], backref='iniciador', lazy='dynamic')
+    conversas_recebidas = db.relationship('Conversa', foreign_keys=[Conversa.usuario2_id], backref='receptor', lazy='dynamic')
 
-    # amizades, crushes e notificações podem continuar com backref, sem conflitos
-    amizades_enviadas = db.relationship(
-        'Amizade',
-        foreign_keys='Amizade.solicitante_id',
-        back_populates='solicitante',
-        lazy='dynamic'
-    )
-    amizades_recebidas = db.relationship(
-        'Amizade',
-        foreign_keys='Amizade.solicitado_id',
-        back_populates='solicitado',
-        lazy='dynamic'
-    )
-    crushes_feitos = db.relationship(
-        'Crush',
-        foreign_keys='Crush.admirador_id',
-        back_populates='admirador',
-        lazy='dynamic'
-    )
-    crushes_recebidos = db.relationship(
-        'Crush',
-        foreign_keys='Crush.alvo_id',
-        back_populates='alvo',
-        lazy='dynamic'
-    )
-    notificacoes = db.relationship('Notificacao', back_populates='usuario', cascade='all, delete-orphan', lazy='dynamic')
+    # Relacionamentos simplificados com backref
+    posts = db.relationship('Post', backref='Usuario', cascade='all, delete-orphan')
+    likes = db.relationship('Like', backref='Usuario', cascade='all, delete-orphan')
+    comentarios = db.relationship('Comentario', backref='Usuario', cascade='all, delete-orphan')
+
+    # Amizades, crushes e notificações com backref ajustado
+    amizades_enviadas = db.relationship('Amizade', foreign_keys='Amizade.solicitante_id', backref='solicitante_amizade')
+    amizades_recebidas = db.relationship('Amizade', foreign_keys='Amizade.solicitado_id', backref='solicitado_amizade')
+    crushes_feitos = db.relationship('Crush', foreign_keys='Crush.admirador_id', backref='admirador_crush')
+    crushes_recebidos = db.relationship('Crush', foreign_keys='Crush.alvo_id', backref='alvo_crush')
+    notificacoes = db.relationship('Notificacao', backref='Usuario', cascade='all, delete-orphan')
 
     def amizade_com(self, outro_usuario_id):
         return Amizade.query.filter(
@@ -79,11 +81,11 @@ class Post(db.Model):
     usuario_id = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=False)
 
     autor = db.relationship('Usuario', back_populates='posts')
-    likes = db.relationship('Like', back_populates='post', cascade='all, delete-orphan', lazy='dynamic')
-    comentarios = db.relationship('Comentario', back_populates='post', cascade='all, delete-orphan', lazy='dynamic')
+    likes = db.relationship('Like', back_populates='post', cascade='all, delete-orphan')
+    comentarios = db.relationship('Comentario', back_populates='post', cascade='all, delete-orphan',)
 
     def reagido_por(self, usuario, tipo):
-        return self.likes.filter_by(usuario_id=usuario.id, tipo=tipo).first() is not None
+        return db.session.query(Like).filter_by(usuario_id=usuario.id, tipo=tipo).first() is not None
 
     def curtido_por(self, usuario):
         if not usuario.is_authenticated:
@@ -91,10 +93,10 @@ class Post(db.Model):
         return self.likes.filter_by(usuario_id=usuario.id, tipo='like').first() is not None
 
     def contar_reacoes(self, tipo):
-        return self.likes.filter_by(tipo=tipo).count()
+        return db.session.query(Like).filter_by(post_id=self.id, tipo=tipo).count()
 
     def total_likes(self):
-        return self.likes.filter_by(tipo='like').count()
+        return db.session.query(Like).filter_by(post_id=self.id, tipo='like').count()
 
     def __repr__(self):
         return f"<Post {self.id}>"
@@ -146,3 +148,20 @@ class Notificacao(db.Model):
     usuario_id = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=False)
 
     usuario = db.relationship('Usuario', back_populates='notificacoes')
+
+class Mensagem(db.Model):
+    __tablename__ = 'mensagem'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)  # Autoincrement
+    conteudo = db.Column(db.String(500), nullable=False)
+    remetente_id = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=False)
+    conversa_id = db.Column(db.Integer, db.ForeignKey('conversa.id'), nullable=False)
+    data_envio = db.Column(db.DateTime, nullable=False)
+
+    # Relacionamento com a tabela 'Conversa'
+    conversa = db.relationship('Conversa', back_populates='mensagens')
+
+    # Relacionamento com a tabela 'Usuario' (remetente)
+    remetente = db.relationship('Usuario', lazy='joined')
+
+    def __repr__(self):
+        return f"<Mensagem de {self.remetente_id} na conversa {self.conversa_id}>"

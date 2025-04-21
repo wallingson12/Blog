@@ -17,7 +17,10 @@
         <div class="container-fluid">
             <!-- Logo / Início -->
             <!-- CERTO -->
-            <img src="{{ url_for('static', filename='Logo.jpg') }}" alt="PING" class="logo align-self-center me-3">
+            <a class="navbar-brand" href="{{ url_for('index') }}">
+                <img src="{{ url_for('static', filename='Logo.jpg') }}"
+                style="height: 40px; /* ajuste o tamanho como preferir */">
+            </a>
             <a class="navbar-brand" href="{{ url_for('index') }}">Início</a>
 
             <!-- Botão hamburguer para mobile -->

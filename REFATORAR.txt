@@ -1,0 +1,26 @@
+#### routes/, models/, services/, forms/, utils/.###
+
+2. Evitar código duplicado
+# Função register
+A lógica de processamento de um novo usuário (salvamento de avatar, hash da senha, etc.) poderia ser movida para uma função auxiliar (como mencionei anteriormente). Isso tornaria o código mais limpo e modular, especialmente considerando que o processo de criação de um novo usuário é algo comum.
+
+# Função perfil_usuario
+A função perfil_usuario tem muita lógica dentro dela, como a verificação do avatar, a atualização de informações do usuário, a obtenção de amigos, as solicitações de amizade, entre outras. Isso pode ser dividido em funções menores, por exemplo
+
+# Função comentar
+A lógica de adicionar um comentário e verificar seu conteúdo poderia ser extraída para uma função separada, assim como a parte de exibir mensagens de erro e sucesso. Além disso, a verificação do conteúdo do comentário pode ser centralizada em uma função reutilizável.
+
+# Função delete_post
+A lógica de exclusão de post e imagem associada pode ser refatorada em uma função separada, já que há uma duplicação de lógica de remoção de imagem, tanto no delete_post quanto no processo de remoção de imagem dentro de outras funcionalidades.
+
+# unções de "Amizade" (enviar_amizade, aceitar_amizade, recusar_amizade, excluir_amizade)
+Essas funções têm lógicas semelhantes (verificações de amizade, mudança de status, commits no banco, e flash de mensagens). Essas funções poderiam ser refatoradas para compartilhar a lógica de verificação de amizade e mudanças no status, ou até para centralizar o processo de envio e aceitação de amizade em uma função única, com um parâmetro que defina a ação (enviar, aceitar, recusar, excluir).
+
+# Função amigos
+A função amigos contém uma lógica que busca as amizades e monta a lista de amigos com base nas relações. A lógica de montar essa lista pode ser extraída para uma função à parte, tornando a função principal amigos mais concisa.
+
+# Função buscar_usuarios
+A busca por usuários pode ser separada em uma função auxiliar para facilitar a reutilização e a manutenção, especialmente se você for precisar dessa funcionalidade em outros lugares do sistema no futuro.
+
+# Função reagir
+A função que lida com reações (curtir/descurtir) também poderia ser extraída em funções auxiliares, principalmente para verificar a existência de uma reação e adicionar ou remover a reação correspondente. Isso ajudaria a manter a função reagir mais simples e de fácil entendimento

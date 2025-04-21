@@ -145,7 +145,6 @@ def adicionar_tabela_action(entry_nome, entry_def, combo):
     combo.config(values=inspect(engine).get_table_names(schema=schema))
     messagebox.showinfo("Sucesso", f"Tabela '{nome}' criada com sucesso.")
 
-
 def iniciar_interface():
     root = tk.Tk()
     root.title("Administração de Banco de Dados")
