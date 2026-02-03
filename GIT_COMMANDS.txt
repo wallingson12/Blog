@@ -1,0 +1,60 @@
+# COMANDOS GIT PARA O COMMIT
+
+## 1. Verificar alterações
+git status
+
+## 2. Adicionar novos arquivos
+git add routes/
+git add app.py
+
+## 3. Adicionar templates modificados
+git add templates/
+
+## 4. Remover arquivo antigo (se já excluiu)
+git rm main.py
+# OU se renomeou para backup:
+git add main.py.backup
+
+## 5. Ver resumo das alterações
+git diff --staged --stat
+
+## 6. Fazer o commit
+git commit -m "refactor: modularizar aplicação Flask em blueprints
+
+- Criar estrutura de blueprints (auth, posts, profile, friends, messages, search)
+- Refatorar app.py para usar blueprints
+- Atualizar templates com novos endpoints (namespace dos blueprints)
+- Remover main.py antigo
+- Melhorar organização e manutenibilidade do código"
+
+## 7. (Opcional) Push para repositório remoto
+git push origin main
+# OU
+git push origin master
+
+---
+
+## ALTERNATIVA: Commit em etapas
+
+### Commit 1: Criar estrutura de rotas
+git add routes/
+git commit -m "feat: criar estrutura de blueprints para organizar rotas"
+
+### Commit 2: Refatorar app.py
+git add app.py
+git commit -m "refactor: migrar app.py para usar blueprints"
+
+### Commit 3: Atualizar templates
+git add templates/
+git commit -m "fix: atualizar endpoints nos templates para usar namespaces"
+
+### Commit 4: Limpar arquivos antigos
+git rm main.py
+git commit -m "chore: remover main.py antigo"
+
+---
+
+## Para ver o que mudou em cada arquivo:
+git diff app.py
+git diff templates/index.html
+git diff templates/base.html
