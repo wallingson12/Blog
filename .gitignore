@@ -1,0 +1,8 @@
+# Ignorar pasta chamada List
+List/
+
+# Ignorar arquivo GIT_COMMANDS.txt
+GIT_COMMANDS.txt
+
+# Ignorar arquivo de ambiente
+.env
