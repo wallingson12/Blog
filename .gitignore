@@ -1,8 +1,20 @@
-# Ignorar pasta chamada List
-List/
+# Python
+*.pyc
+__pycache__/
 
-# Ignorar arquivo GIT_COMMANDS.txt
-GIT_COMMANDS.txt
+# Environment
+.venv/
+env/
+*.env
 
-# Ignorar arquivo de ambiente
-.env
+# PyCharm
+.idea/
+
+# Logs
+*.log
+
+# Uploads e arquivos temporários
+static/uploads/
+
+# Outros
+*.iml
