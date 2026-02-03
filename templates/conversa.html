@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2 class="mb-4">Conversando com {{ usuario.username }}</h2>
+
+  <div class="card">
+    <div class="card-body message-container" style="max-height: 400px; overflow-y: auto;">
+      {% if mensagens %}
+        {% for msg in mensagens %}
+          {% if msg.remetente_id == current_user.id %}
+            <!-- saída (outgoing) -->
+            <div class="message-bubble outgoing">
+              {{ msg.conteudo }}
+              <div class="bubble-time">{{ msg.data_envio.strftime('%H:%M') }}</div>
+            </div>
+          {% else %}
+            <!-- entrada (incoming) -->
+            <div class="message-bubble incoming">
+              <strong>{{ msg.remetente.username }}</strong><br>
+              {{ msg.conteudo }}
+              <div class="bubble-time">{{ msg.data_envio.strftime('%H:%M') }}</div>
+            </div>
+          {% endif %}
+        {% endfor %}
+      {% else %}
+        <p class="text-muted">Nenhuma mensagem ainda.</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <form method="POST" action="{{ url_for('messages.enviar_mensagem', usuario_id=usuario.id) }}" class="mt-3 d-flex">
+    <input type="text" name="conteudo" class="form-control me-2" placeholder="Digite sua mensagem..." required>
+    <button class="btn btn-primary">Enviar</button>
+  </form>
+</div>
+{% endblock %}

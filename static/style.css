@@ -1,0 +1,217 @@
+/* Estilo global do body */
+body {
+    background: linear-gradient(145deg, #e0f7fa 0%, #ffffff 100%);
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    color: #333;
+}
+
+/* Centralização e espaçamento principal */
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Estilo dos cards de posts */
+.card {
+    animation: fadeInUp 0.4s ease forwards;
+    margin-top: 20px;
+    border-radius: 12px;
+    background-color: #ffffff;
+    padding: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    transition: box-shadow 0.2s ease-in-out;
+}
+
+.card:hover {
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Títulos */
+h1 {
+    font-size: 2rem;
+    color: #343a40;
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+h2 {
+    font-size: 1.5rem;
+    color: #343a40;
+    text-align: center;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+/* Imagem do avatar */
+.avatar-img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+/* Links da navbar */
+.nav-link {
+    font-size: 0.875rem;
+    padding: 8px 15px;
+    color: white !important;
+    text-decoration: none;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: #fff;
+    border-radius: 5px;
+}
+
+.nav-link:focus {
+    outline: 2px solid #fff;
+    outline-offset: 2px;
+}
+
+/* Estilo das imagens dos cards */
+.card img.img-fluid {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16/9;
+    object-fit: cover;
+    border-radius: 10px;
+    transition: transform 0.3s ease-in-out;
+}
+
+.card img.img-fluid:hover {
+    transform: scale(1.02);
+}
+
+.logo {
+    width: 10%;
+    height: auto;
+}
+
+/* Título dentro do card */
+.card-title {
+    font-size: clamp(1rem, 1.5vw, 1.25rem);
+    font-weight: 600;
+    margin-top: 10px;
+    margin-bottom: 8px;
+}
+
+/* Botão reutilizável */
+.btn-primary {
+    background-color: #00bcd4;
+    border: none;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #0097a7;
+}
+
+/* Texto destacado */
+.texto-preto-negrito {
+    color: #000 !important;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+/* Responsividade */
+@media (max-width: 576px) {
+    .navbar-brand {
+        font-size: 2.5rem;
+    }
+
+    .card-title {
+        font-size: 1rem;
+    }
+
+    .nav-link {
+        font-size: 1.25rem;
+        padding: 12px 20px;
+    }
+
+    .container-fluid {
+        padding: 10px;
+    }
+}
+
+.container-fluid {
+    padding: 20px;
+}
+
+.col-md-6 {
+    max-width: 800px; /* mantém os cards legíveis */
+    margin: 0 auto;
+}
+
+.col-md-3 {
+    padding: 10px;
+}
+
+/* Opcional: barra lateral fixa */
+.sticky-top {
+    top: 80px;
+}
+
+/* empilha as mensagens */
+.message-container {
+  display: flex;
+  flex-direction: column;
+}
+
+/* estilo base das bolhas */
+.message-bubble {
+  max-width: 70%;
+  margin: .5rem 0;
+  padding: .75rem 1rem;
+  border-radius: 1rem;
+  position: relative;
+  word-wrap: break-word;
+}
+
+/* bolha de quem recebe (incoming) */
+.incoming {
+  background-color: #f1f3f5;
+  align-self: flex-start;
+  border-bottom-left-radius: 0;
+}
+
+/* bolha de quem envia (outgoing) */
+.outgoing {
+  background-color: #0d6efd;
+  color: white;
+  align-self: flex-end;
+  border-bottom-right-radius: 0;
+}
+
+/* horário dentro da bolha */
+.bubble-time {
+  font-size: 0.75rem;
+  color: #6c757d;
+  margin-top: .25rem;
+  text-align: right;
+}
+

@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2 class="text-center mb-4">Amigos de <span class="text-dark">{{ user.username }}</span></h2>
+
+{% if lista_amigos and lista_amigos|length > 0 %}
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8">
+            <ul class="list-group">
+                {% for amigo in lista_amigos %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center mb-3 shadow-sm rounded">
+                        <!-- Info do amigo -->
+                        <a href="{{ url_for('profile.perfil_usuario', user_id=amigo.id) }}" class="d-flex align-items-center text-decoration-none">
+                            <img src="{{ url_for('static', filename='uploads/avatars/' + amigo.avatar) }}"
+                                 alt="Avatar de {{ amigo.username }}"
+                                 width="50" height="50" class="rounded-circle me-3">
+                            <span class="fw-bold text-dark">{{ amigo.username }}</span>
+                        </a>
+
+                        {% if current_user.id == user.id %}
+                        <!-- Botão excluir -->
+                        <form action="{{ url_for('friends.excluir_amizade', amizade_id=amigo.amizade_id) }}"
+                              method="POST"
+                              onsubmit="return confirm('Tem certeza que deseja excluir esta amizade?');">
+                            <button class="btn btn-outline-danger btn-sm">Excluir</button>
+                        </form>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+{% else %}
+    <div class="alert alert-warning text-center">
+        {{ user.username }} não tem amigos ainda. 😞
+    </div>
+{% endif %}
+{% endblock %}

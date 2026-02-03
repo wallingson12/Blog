@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container my-4" style="max-width: 600px;">
+    {% if current_user.is_authenticated %}
+        <!-- Botão de Novo Post -->
+        <div class="text-end mb-3">
+            <a href="{{ url_for('posts.new_post') }}" class="btn btn-primary">✏️ Novo Post</a>
+        </div>
+    {% endif %}
+
+    {% for post in posts %}
+        <div class="card mb-4 shadow-sm rounded-3">
+            <div class="card-body">
+                <div class="d-flex align-items-center gap-3 flex-wrap mb-3">
+                    <a href="{{ url_for('profile.perfil_usuario', user_id=post.autor.id) }}" class="text-decoration-none">
+                        <img src="{{ url_for('static', filename='uploads/avatars/' ~ post.autor.avatar) }}"
+                             alt="Avatar do Autor"
+                             class="rounded-circle"
+                             style="width: 50px; height: 50px; object-fit: cover;">
+                    </a>
+                    <div>
+                        <a href="{{ url_for('profile.perfil_usuario', user_id=post.autor.id) }}"
+                           class="fw-bold text-decoration-none text-dark">
+                            {{ post.autor.username }}
+                        </a>
+                    </div>
+                </div>
+
+                {% if post.image %}
+                    <div class="mb-3">
+                        <img src="{{ url_for('auth.uploaded_file', folder='post_images', filename=post.image) }}"
+                             alt="Imagem do Post" class="img-fluid rounded w-100">
+                    </div>
+                {% endif %}
+
+                <p class="card-text">{{ post.conteudo }}</p>
+
+                <!-- Botões de Reações -->
+                <form method="POST" action="{{ url_for('posts.reagir', post_id=post.id) }}" class="d-flex gap-2 mt-3 flex-wrap">
+                    <button type="submit"
+                            name="tipo" value="like"
+                            class="btn btn-sm {% if post.reagido_por(current_user, 'like') %}btn-danger{% else %}btn-outline-danger{% endif %}">
+                        ❤️ Like <span class="badge bg-light text-dark">{{ post.contar_reacoes('like') }}</span>
+                    </button>
+                    <button type="submit"
+                            name="tipo" value="gargalhada"
+                            class="btn btn-sm {% if post.reagido_por(current_user, 'gargalhada') %}btn-warning{% else %}btn-outline-warning{% endif %}">
+                        😂 Gargalhada <span class="badge bg-light text-dark">{{ post.contar_reacoes('gargalhada') }}</span>
+                    </button>
+                    <button type="submit"
+                            name="tipo" value="choro"
+                            class="btn btn-sm {% if post.reagido_por(current_user, 'choro') %}btn-info{% else %}btn-outline-info{% endif %}">
+                        😢 Choro <span class="badge bg-light text-dark">{{ post.contar_reacoes('choro') }}</span>
+                    </button>
+                    <button type="submit"
+                            name="tipo" value="raiva"
+                            class="btn btn-sm {% if post.reagido_por(current_user, 'raiva') %}btn-dark{% else %}btn-outline-dark{% endif %}">
+                        😡 Raiva <span class="badge bg-light text-dark">{{ post.contar_reacoes('raiva') }}</span>
+                    </button>
+                </form>
+
+                <hr>
+
+                <!-- Comentários -->
+                <div class="comentarios">
+                    <h6 class="mb-3">Comentários:</h6>
+
+                    {% for comentario in post.comentarios %}
+                        <div class="mb-2 p-2 border rounded">
+                            <strong>{{ comentario.usuario.username }}</strong>:
+                            <p class="mb-1">{{ comentario.conteudo }}</p>
+                            <small class="text-muted">
+                                {% if comentario.data_criacao %}
+                                    {{ comentario.data_criacao.strftime('%d/%m/%Y %H:%M') }}
+                                {% else %}
+                                    Data não disponível
+                                {% endif %}
+                            </small>
+                        </div>
+                    {% else %}
+                        <p class="text-muted">Nenhum comentário ainda.</p>
+                    {% endfor %}
+                </div>
+
+                <!-- Formulário de comentário -->
+                {% if current_user.is_authenticated %}
+                    <form action="{{ url_for('posts.comentar', post_id=post.id) }}" method="POST" class="mt-3">
+                        <textarea name="conteudo" class="form-control mb-2" rows="2"
+                                  placeholder="Escreva um comentário..." required></textarea>
+                        <button type="submit" class="btn btn-sm btn-primary">Comentar</button>
+                    </form>
+                {% else %}
+                    <p class="mt-3 text-muted">Faça login para comentar.</p>
+                {% endif %}
+
+                <!-- Botão de excluir (visível apenas para o autor) -->
+                {% if current_user.is_authenticated and current_user.id == post.usuario_id %}
+                    <form action="{{ url_for('posts.delete_post', post_id=post.id) }}" method="POST"
+                          onsubmit="return confirm('Tem certeza que deseja excluir este post?');" class="mt-3">
+                        <button type="submit" class="btn btn-danger btn-sm">🗑️ Excluir</button>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

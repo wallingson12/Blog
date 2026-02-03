@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="container mt-4">
+    <h1 class="mb-4 text-center">💬 Minhas Conversas</h1>
+
+    {% if conversas %}
+      <ul class="list-group">
+        {% for conversa in conversas %}
+          {# Descobre quem é o outro usuário da conversa #}
+          {% if conversa.usuario1_id == current_user.id %}
+            {% set outro = conversa.usuario2 %}
+          {% else %}
+            {% set outro = conversa.usuario1 %}
+          {% endif %}
+
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            <div>
+              <strong>{{ outro.username }}</strong>
+              <br>
+              <small class="text-muted">
+                Iniciada em {{ conversa.data_criacao.strftime('%d/%m/%Y %H:%M') }}
+              </small>
+            </div>
+            <a href="{{ url_for('messages.ver_conversa', usuario_id=outro.id) }}"
+               class="btn btn-sm btn-primary">
+              Abrir
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <div class="alert alert-info text-center">
+        Você ainda não tem conversas. Envie uma mensagem para alguém primeiro!
+      </div>
+    {% endif %}
+  </div>
+{% endblock %}

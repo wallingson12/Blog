@@ -1,0 +1,31 @@
+refactor: modularizar aplicação Flask em blueprints
+
+## Alterações principais:
+
+### Arquivos criados:
+- routes/__init__.py - Pacote de rotas
+- routes/auth.py - Rotas de autenticação (login, register, logout)
+- routes/posts.py - Rotas de posts (index, new_post, reagir, comentar, delete_post)
+- routes/profile.py - Rotas de perfil (perfil_usuario, adicionar_crush, remover_crush)
+- routes/friends.py - Rotas de amizade (enviar/aceitar/recusar/excluir amizade, listar amigos)
+- routes/messages.py - Rotas de mensagens (enviar_mensagem, ver_conversa, listar_chats)
+- routes/search.py - Rotas de busca (buscar_usuarios, autocomplete)
+
+### Arquivos modificados:
+- app.py - Refatorado para usar blueprints ao invés de rotas diretas
+- templates/*.html - Atualizados endpoints url_for() para usar namespaces dos blueprints
+  (ex: url_for('index') → url_for('posts.index'))
+
+### Arquivos removidos:
+- main.py (ou app.py antigo) - Substituído pela nova estrutura modularizada
+
+## Benefícios:
+- ✅ Código mais organizado e modular
+- ✅ Separação clara de responsabilidades
+- ✅ Facilita manutenção e testes
+- ✅ Melhor escalabilidade do projeto
+- ✅ Segue boas práticas Flask
+
+## Breaking changes:
+- Endpoints agora usam namespaces (ex: 'posts.index' ao invés de 'index')
+- Templates HTML foram atualizados para refletir novos endpoints

@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="text-center mb-4">🔍 Buscar Usuários</h2>
+
+    <form method="GET" action="{{ url_for('search.buscar_usuarios') }}" class="input-group mb-4">
+        <input type="text" class="form-control" name="q" placeholder="Digite o nome de usuário..." value="{{ termo }}">
+        <button class="btn btn-primary" type="submit">Buscar</button>
+    </form>
+
+    {% if usuarios %}
+        <ul class="list-group">
+            {% for usuario in usuarios %}
+                <li class="list-group-item d-flex align-items-center justify-content-between">
+                    <div class="d-flex align-items-center gap-3">
+                        <img src="{{ url_for('static', filename='uploads/avatars/' ~ usuario.avatar) }}"
+                             class="avatar-img" alt="Avatar">
+                        <span><strong>{{ usuario.username }}</strong></span>
+                    </div>
+                        <a href="{{ url_for('profile.perfil_usuario', user_id=usuario.id) }}" class="btn btn-outline-info btn-sm">👤 Ver Perfil</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="text-muted text-center">Nenhum usuário encontrado.</p>
+    {% endif %}
+</div>
+{% endblock %}
